@@ -6,7 +6,7 @@ class Employee {
     password_hash: string;
     location_warehouse_id: number; // Foreign Key
 
-    constructor(employee_id, username, name, level, password_hash, location_warehouse_id) {
+    constructor(employee_id: bigint, username: string, name: string, level: string, password_hash: string, location_warehouse_id: number) {
         this.employee_id = employee_id;
         this.username = username;
         this.name = name;

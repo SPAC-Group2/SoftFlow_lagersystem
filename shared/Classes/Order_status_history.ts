@@ -6,7 +6,7 @@ class Order_status_history {
     status_date_readable: string; //TODO: Make a function to convert the raw timestamp to a readable date
     employee_id: bigint; // Foreign Key
 
-    constructor(history_id, order_number, status = "Just created", status_date_raw, status_date_readable, employee_id) {
+    constructor(history_id: bigint, order_number: bigint, status = "Just created", status_date_raw: bigint, status_date_readable: string, employee_id: bigint) {
         this.history_id = history_id;
         this.order_number = order_number;
         this.status = status;

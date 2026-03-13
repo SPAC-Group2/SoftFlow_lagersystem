@@ -8,7 +8,7 @@ class Inventory_transaction {
     transactions_date_readable: string; //TODO: Make a function to convert the raw timestamp to a readable date
     employee_id: bigint; // Foreign Key
 
-    constructor(transaction_id, product_id, inventory_change_amount = 0, type_id, is_done = false, transaction_date_raw, transaction_date_readable, employee_id) {
+    constructor(transaction_id: bigint, product_id: bigint, inventory_change_amount = 0n, type_id: number, is_done = false, transaction_date_raw: bigint, transaction_date_readable: string, employee_id: bigint) {
         this.transaction_id = transaction_id;
         this.product_id = product_id;
         this.inventory_change_amount = inventory_change_amount;
