@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getExampleData2 } from "../services/exampleService.js";
+import { getExampleData2 } from "../services/exampleService";
 
 export function getOrders(req: Request, res: Response) {
     
