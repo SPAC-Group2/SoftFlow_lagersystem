@@ -23,7 +23,7 @@ primary_location int references Warehouses(warehouse_id)
 CREATE TABLE Categories(
 category_id serial PRIMARY KEY,
 cateory text NOT NULL
-)
+);
 -- create Products table
 CREATE TABLE Products(
 product_id bigserial PRIMARY KEY,
@@ -33,14 +33,19 @@ description text,
 price money NOT NULL,
 category_id int references Categories(category_id)
 );
+-- create transactiontypes table
+CREATE TABLE TransactionTypes(
+type_id serial PRIMARY KEY,
+type_of_transaction text NOT NULL
+);
 
--- create inventory transactions
+-- create inventory transactions table
 CREATE TABLE InventoryTransactions(
 transaction_id bigserial PRIMARY KEY,
 product_id bigint NOT NULL references Products(product_id),
 change_amount int NOT NULL,
 type_of_transaction smallint NOT NULL references Transactiontypes(type_id),
-Status bool NOT NULL,
+completed bool NOT NULL,
 location int NOT NULL references WareHouses(warehouse_id),
 date_of_transaction timestamp default current_timestamp,
 made_by bigint references Employees(employee_id)
@@ -54,28 +59,29 @@ status text NOT NULL
 );
 -- create Customers table
 CREATE TABLE Customers (
-	customer_id bigserial PRIMARY KEY,
-	public_id text UNIQUE,
-	first_name text NOT NULL,
-	last_name text NOT NULL,
-	email text UNIQUE NOT NULL,
-	customer_location text
+customer_id bigserial PRIMARY KEY,
+public_id text UNIQUE,
+first_name text NOT NULL,
+last_name text NOT NULL,
+email text UNIQUE NOT NULL,
+customer_location text
 );
 -- create Orders table
 CREATE TABLE Orders(
-order_number bigserial PRIMARY KEY,
+order_id bigserial PRIMARY KEY,
 public_id text,
 customer_id bigint NOT NULL references customers(customer_id),
 date_of_creation timestamp default current_timestamp,
 created_by_employee bigint references Employees(employee_id)
-)
+);
+
 -- create OrderItems table
 CREATE TABLE OrderItems(
 order_id bigint references Orders(order_id),
 product_id bigint references Products(product_id),
 quantity int NOT NULL,
 PRIMARY KEY (order_id, product_id)
-)
+);
 
 -- create Orderstatushistory table
 CREATE TABLE OrderStatusHistory(
