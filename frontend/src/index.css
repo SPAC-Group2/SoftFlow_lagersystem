@@ -154,3 +154,22 @@ a {
   justify-content: center;
   font-weight: bold;
 }
+
+/* Filter bar under sidetitel */
+.filter-bar {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+/* Knapper i filter bar */
+.filter-button {
+  background-color: #1f2a44;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
