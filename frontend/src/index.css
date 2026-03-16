@@ -66,3 +66,15 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+/* Layout for hele siden */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Indhold */
+.content {
+  flex: 1;
+  padding: 40px;
+}
