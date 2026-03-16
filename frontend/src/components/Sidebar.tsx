@@ -1,10 +1,15 @@
+import logo from "../assets/sf_logo_graa.svg";
+
 // Sidebar komponent der indeholder navigationen til systemet
 function Sidebar() {
     return (
         <aside className="sidebar">
 
+            <img src={logo} alt="StockFlow logo" className="logo" />
+
             {/* Logo område */}
             <div className="sidebar-logo">
+                <img src={logo} alt="StockFlow logo" className="logo" />
                 <h2>StockFlow</h2>
             </div>
 
