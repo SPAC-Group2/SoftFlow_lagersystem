@@ -20,8 +20,5 @@
     "nodemon": "^3.0.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
-=======
-    "@types/express": "^5.0.6"
->>>>>>> REST_Porblemer
   }
 }
