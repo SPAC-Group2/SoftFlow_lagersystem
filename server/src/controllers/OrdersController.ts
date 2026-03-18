@@ -13,3 +13,10 @@ export function getOrder(req: Request, res: Response) {
     res.json(id);
 }
 
+export function getOrderCustomer(req: Request, res: Response) {
+    const id = req.params.id;
+    const customers = req.params.customer
+    const data = getExampleData2();
+    res.json({data, customers, id});
+}
+
