@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Product } from "../../../shared/Classes/Product";
+import type { Product } from "../shared/types/Product";
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 
@@ -37,7 +37,7 @@ function ProductsPage() {
 }, []);*/
 
 useEffect(() => {
-  fetch("http://localhost:3000/api/products")
+  fetch("http://localhost:3000/api/Products")
     .then(async (res) => {
       console.log("STATUS:", res.status);
       const data = await res.json();
@@ -75,10 +75,10 @@ useEffect(() => {
             </div>
 
             {products.map((product) => (
-              <div className="table-row" key={product.public_id}>
-                <span>{product.public_id}</span>
-                <span>{product.category_id}</span>
-                <span>{product.price}{product.currency_symbol}</span>
+              <div className="table-row" key={product.id}>
+                <span>{product.id}</span>
+                <span>{product.category}</span>
+                <span>{product.price}</span>
                 <span>{Number(product.stock)}</span>
                 <span>
                   {Number(product.stock) === 0
@@ -120,9 +120,9 @@ useEffect(() => {
                 </div>
 
                 <div className="modal-table-row">
-                  <span>{selectedProduct.public_id}</span>
-                  <span>{selectedProduct.category_id}</span>
-                  <span>{selectedProduct.price}{selectedProduct.currency_symbol}</span>
+                  <span>{selectedProduct.id}</span>
+                  <span>{selectedProduct.category}</span>
+                  <span>{selectedProduct.price}</span>
                   <span>{Number(selectedProduct.stock)}</span>
                   <span>
                     {Number(selectedProduct.stock) === 0
@@ -147,8 +147,8 @@ useEffect(() => {
                 <div className="modal-table-row details-grid">
                   <span>{selectedProduct.name}</span>
                   <span>{selectedProduct.description}</span>
-                  <span>{selectedProduct.currency_name}</span>
-                  <span>{selectedProduct.category_id}</span>
+                  {/*<span>{selectedProduct.currency_name}</span>
+                  <span>{selectedProduct.category_id}</span>*/}
                 </div>
               </div>
             </div>
