@@ -1,14 +1,13 @@
-import pool from '../db/db_module'; // Adjust the import path as needed
+import pool from '../db/db_module'; 
+//import {Product} from "@shared/types";
+import {mapToProductList} from "../shared/mappers/ProductMapper";
 
-/**
- * Example function to retrieve user role by ID.
- * Parameterized queries safeguard against SQL injection.
-*/
-export async function getAllProductsFromDB() {
-  const query = 'SELECT * FROM ProductsView';
+
+export async function getAllProducts() {
+  const query = 'SELECT * FROM GetProducts';
   try {
     const result = await pool.query(query);
-    return result.rows;
+    return mapToProductList(result.rows);
   } catch (error) {
     console.error('Error executing query:', error);
     throw error;

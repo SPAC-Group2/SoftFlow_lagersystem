@@ -125,6 +125,42 @@ INSERT INTO Products (name,description, price, category_id) VALUES ('Car Phone M
 INSERT INTO Products (name,description, price, category_id) VALUES ('Car Vacuum Portable', 'Compact vacuum cleaner for car interiors', '39.99', '15');
 INSERT INTO Products (name,description, price, category_id) VALUES ('Car Emergency Kit', 'Basic roadside emergency safety kit', '49.99', '15');
 
+-- transactionstypes
+INSERT INTO Transactiontypes (type_of_transaction) VALUES ('Solgt');
+INSERT INTO Transactiontypes (type_of_transaction) VALUES ('retuneret');
+INSERT INTO Transactiontypes (type_of_transaction) VALUES ('forsvundet');
+INSERT INTO Transactiontypes (type_of_transaction) VALUES ('Varelevering');
+
+INSERT INTO inventorytransactions
+(product_id, change_amount, type_of_transaction, location, date_of_transaction, completed)
+SELECT
+    (1 + floor(random()*95))::int,
+
+    CASE
+        WHEN t = 1 THEN -(1 + floor(random()*5))::int  -- sold
+        WHEN t = 2 THEN (1 + floor(random()*3))::int   -- returned
+        WHEN t = 3 THEN -(1 + floor(random()*2))::int  -- lost
+        ELSE (10 + floor(random()*40))::int            -- delivery
+    END,
+
+    t,
+
+    (1 + floor(random()*3))::int,
+
+    '2026-02-01'::timestamp +
+    (floor(random()*60) || ' days')::interval +
+    (floor(random()*24) || ' hours')::interval,
+
+    CASE
+        WHEN random() < 0.85 THEN TRUE   -- most transactions completed
+        ELSE FALSE                       -- some pending
+    END
+
+FROM (
+    SELECT
+        generate_series(1,300),
+        (1 + floor(random()*4))::int AS t
+) AS transactions;
 
 
 -- insert Order status 

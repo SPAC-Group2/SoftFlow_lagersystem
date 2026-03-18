@@ -1,4 +1,13 @@
-class Product {
+export interface Product{
+    id: string;
+    name: string;
+    description: string;
+    price: number;
+    stock: bigint;
+    category: string;
+}
+
+/*class Product {
     public_id: string;
     name: string;
     description: string;
@@ -18,4 +27,4 @@ class Product {
         this.currency_symbol = currency_symbol;
         this.category_id = category_id;
     }
-}
+}*/
