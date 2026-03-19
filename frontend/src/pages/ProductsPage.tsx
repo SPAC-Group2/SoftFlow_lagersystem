@@ -91,6 +91,10 @@ function ProductsPage() {
       });
   }, []);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory]);
+
   const filteredProducts =
     selectedCategory === "all"
       ? products
@@ -105,10 +109,6 @@ function ProductsPage() {
   );
 
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [selectedCategory]);
 
   return (
     <div className="layout">
@@ -134,9 +134,9 @@ function ProductsPage() {
               </button>
 
               {showCategoryDropdown && (
-                <div className="dropdown-menu">
+                <div className="category-menu">
                   <button
-                    className="dropdown-item"
+                    className="category-menu-item"
                     type="button"
                     onClick={() => {
                       setSelectedCategory("all");
@@ -150,7 +150,7 @@ function ProductsPage() {
                     categories.map((cat) => (
                       <button
                         key={cat}
-                        className="dropdown-item"
+                        className="category-menu-item"
                         type="button"
                         onClick={() => {
                           setSelectedCategory(cat);
@@ -161,7 +161,7 @@ function ProductsPage() {
                       </button>
                     ))
                   ) : (
-                    <div className="dropdown-empty">No categories found</div>
+                    <div className="category-menu-empty">No categories found</div>
                   )}
                 </div>
               )}
