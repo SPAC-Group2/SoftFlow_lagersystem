@@ -6,48 +6,92 @@ import Topbar from "../components/Topbar";
 function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [showCategoryDropdown, setShowCategoryDropdown] = useState<boolean>(false);
 
-<p>Antal produkter: {products.length}</p>
+  useEffect(() => {
+    fetch("http://localhost:3000/api/Products")
+      .then(async (res) => {
+        if (!res.ok) {
+          throw new Error("Could not fetch products");
+        }
 
-  /*useEffect(() => {
-  const fakeProducts: Product[] = [
-    {
-      public_id: "P-1001",
-      name: "Laptop",
-      description: "God computer",
-      price: 399,
-      stock: 15n,
-      currency_name: "DKK",
-      currency_symbol: "kr",
-      category_id: 1n,
-    },
-    {
-      public_id: "P-1002",
-      name: "Mus",
-      description: "Gaming mus",
-      price: 249,
-      stock: 8n,
-      currency_name: "DKK",
-      currency_symbol: "kr",
-      category_id: 2n,
-    },
-  ];
+        const data: Product[] = await res.json();
+        setProducts(data);
+      })
+      .catch((err) => {
+        console.error("Fejl ved hentning af produkter:", err);
+        setProducts([]);
+      });
+  }, []);
 
-  setProducts(fakeProducts);
-}, []);*/
+  useEffect(() => {
+    fetch("http://localhost:3000/api/Categories")
+      .then(async (res) => {
+        if (!res.ok) {
+          throw new Error("Could not fetch categories");
+        }
 
-useEffect(() => {
-  fetch("http://localhost:3000/api/Products")
-    .then(async (res) => {
-      console.log("STATUS:", res.status);
-      const data = await res.json();
-      console.log("DATA FRA API:", data);
-      setProducts(data);
-    })
-    .catch((err) => {
-      console.error("Fejl ved hentning af produkter:", err);
-    });
-}, []);
+        const data = await res.json();
+
+        if (Array.isArray(data)) {
+          const cleanedCategories = data
+            .map((item) => {
+              if (typeof item === "string") {
+                return item;
+              }
+
+              if (typeof item === "object" && item !== null) {
+                return item.name || item.category || item.category_name || "";
+              }
+
+              return "";
+            })
+            .filter((item): item is string => item !== "");
+
+          setCategories(cleanedCategories);
+        } else if (Array.isArray(data.data)) {
+          const cleanedCategories = data.data
+            .map((item: unknown) => {
+              if (typeof item === "string") {
+                return item;
+              }
+
+              if (typeof item === "object" && item !== null) {
+                const categoryItem = item as {
+                  name?: string;
+                  category?: string;
+                  category_name?: string;
+                };
+
+                return (
+                  categoryItem.name ||
+                  categoryItem.category ||
+                  categoryItem.category_name ||
+                  ""
+                );
+              }
+
+              return "";
+            })
+            .filter((item: string) => item !== "");
+
+          setCategories(cleanedCategories);
+        } else {
+          setCategories([]);
+        }
+      })
+      .catch((err) => {
+        console.error("Fejl ved hentning af categories:", err);
+        setCategories([]);
+      });
+  }, []);
+
+  const filteredProducts =
+    selectedCategory === "all"
+      ? products
+      : products.filter((product) => product.category === selectedCategory);
 
   return (
     <div className="layout">
@@ -59,9 +103,56 @@ useEffect(() => {
           <h1 className="page-title">Products</h1>
 
           <div className="filter-bar">
-            <button className="filter-button">Sort</button>
-            <button className="filter-button">Category</button>
-            <button className="filter-button">Price</button>
+            <button className="filter-button" type="button">
+              Sort
+            </button>
+
+            <div className="category-dropdown-wrapper">
+              <button
+                className="filter-button"
+                type="button"
+                onClick={() => setShowCategoryDropdown((prev) => !prev)}
+              >
+                {selectedCategory === "all" ? "Category" : selectedCategory}
+              </button>
+
+              {showCategoryDropdown && (
+                <div className="dropdown-menu">
+                  <button
+                    className="dropdown-item"
+                    type="button"
+                    onClick={() => {
+                      setSelectedCategory("all");
+                      setShowCategoryDropdown(false);
+                    }}
+                  >
+                    All categories
+                  </button>
+
+                  {categories.length > 0 ? (
+                    categories.map((cat) => (
+                      <button
+                        key={cat}
+                        className="dropdown-item"
+                        type="button"
+                        onClick={() => {
+                          setSelectedCategory(cat);
+                          setShowCategoryDropdown(false);
+                        }}
+                      >
+                        {cat}
+                      </button>
+                    ))
+                  ) : (
+                    <div className="dropdown-empty">No categories found</div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            <button className="filter-button" type="button">
+              Price
+            </button>
           </div>
 
           <section className="products-table">
@@ -74,7 +165,7 @@ useEffect(() => {
               <span>Action</span>
             </div>
 
-            {products.map((product) => (
+            {filteredProducts.map((product) => (
               <div className="table-row" key={product.id}>
                 <span>{product.id}</span>
                 <span>{product.category}</span>
@@ -87,8 +178,10 @@ useEffect(() => {
                     ? "Low Stock"
                     : "In Stock"}
                 </span>
+
                 <button
                   className="action-button"
+                  type="button"
                   onClick={() => setSelectedProduct(product)}
                 >
                   →
@@ -103,6 +196,7 @@ useEffect(() => {
             <div className="product-modal">
               <button
                 className="back-button"
+                type="button"
                 onClick={() => setSelectedProduct(null)}
               >
                 ←
@@ -140,15 +234,11 @@ useEffect(() => {
                 <div className="modal-table-header details-grid">
                   <span>Name</span>
                   <span>Description</span>
-                  <span>Currency</span>
-                  <span>Category id</span>
                 </div>
 
                 <div className="modal-table-row details-grid">
                   <span>{selectedProduct.name}</span>
                   <span>{selectedProduct.description}</span>
-                  {/*<span>{selectedProduct.currency_name}</span>
-                  <span>{selectedProduct.category_id}</span>*/}
                 </div>
               </div>
             </div>

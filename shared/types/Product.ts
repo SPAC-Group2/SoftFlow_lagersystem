@@ -1,10 +1,10 @@
-export interface Product{
-    id: string;
-    name: string;
-    description: string;
-    price: number;
-    stock: bigint;
-    category: string;
+export interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  stock: bigint;
+  category: string;
 }
 
 /*class Product {
