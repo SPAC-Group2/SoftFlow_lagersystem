@@ -9,6 +9,9 @@ function ProductsPage() {
   const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [showCategoryDropdown, setShowCategoryDropdown] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+
+  const productsPerPage = 10;
 
   useEffect(() => {
     fetch("http://localhost:3000/api/Products")
@@ -93,6 +96,20 @@ function ProductsPage() {
       ? products
       : products.filter((product) => product.category === selectedCategory);
 
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+
+  const currentProducts = filteredProducts.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
+
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory]);
+
   return (
     <div className="layout">
       <Sidebar />
@@ -165,7 +182,7 @@ function ProductsPage() {
               <span>Action</span>
             </div>
 
-            {filteredProducts.map((product) => (
+            {currentProducts.map((product) => (
               <div className="table-row" key={product.id}>
                 <span>{product.id}</span>
                 <span>{product.category}</span>
@@ -189,6 +206,39 @@ function ProductsPage() {
               </div>
             ))}
           </section>
+
+          {totalPages > 1 && (
+            <div className="pagination">
+              <button
+                type="button"
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+              >
+                ← Previous
+              </button>
+
+              {Array.from({ length: totalPages }, (_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => setCurrentPage(i + 1)}
+                  className={currentPage === i + 1 ? "active-page" : ""}
+                >
+                  {i + 1}
+                </button>
+              ))}
+
+              <button
+                type="button"
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
+                disabled={currentPage === totalPages}
+              >
+                Next →
+              </button>
+            </div>
+          )}
         </section>
 
         {selectedProduct && (
