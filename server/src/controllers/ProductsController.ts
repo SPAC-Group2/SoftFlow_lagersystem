@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
-import { getExampleData, getExampleData3 } from "../services/exampleService";
 import {ProductFilter, parseProductFilter} from "../utils/ProductFilters";
-import { getAllProducts } from "../services/productService";
+import { getAllProducts, GetPageNumber } from "../services/productService";
 
 export async function getProducts(req: Request, res: Response) {
 
@@ -12,9 +11,10 @@ export async function getProducts(req: Request, res: Response) {
 }
 
 
-export function getProductsInStock(req: Request, res: Response) {
-    const id = req.params.id;
-    const data = getExampleData3();
+export async function getPageNumber(req: Request, res: Response) {
+    
+    const size = Number(req.query.pagesize);
+    const data =  await GetPageNumber(size)
     res.json(data);
 }
 

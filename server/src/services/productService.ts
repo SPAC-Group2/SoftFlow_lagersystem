@@ -1,3 +1,4 @@
+import { count } from 'node:console';
 import pool from '../db/db_module'; 
 //import {Product} from "@shared/types";
 import {mapToProductList} from "../shared/mappers/ProductMapper";
@@ -34,11 +35,9 @@ export async function getAllProducts(filters : ProductFilter) {
     }
     const OFFSET = (filters.page - 1) * filters.pagesize 
     query += " LIMIT " + filters.pagesize + " OFFSET " + OFFSET;
-    console.log(query)
   }
 
   try {
-    console.log(query)
     const result = await pool.query(query, values);
     
     return mapToProductList(result.rows);
@@ -48,3 +47,16 @@ export async function getAllProducts(filters : ProductFilter) {
   }
 }
 
+export async function GetPageNumber(pagesize: number) {
+
+  const query = "SELECT count(*) FROM GetProducts;"
+  try {
+    const tablelength = await pool.query(query);
+    const nu = tablelength.rows.map(row => row.count)
+    const result = Math.ceil(Number(nu[0])/pagesize);
+    return result;
+  } catch (error) {
+    console.error('Error executing query:', error);
+    throw error;
+  }
+}
